@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h6><a class="article-title">{{ post.title }}</a></h6>
+    {% for comment in page_obj %}
+       <p><img class="rounded-circle article-img" src="{{ comment.author.image.url }}"> <strong><a style="text-decoration: none;" href="{% url 'user-posts' comment.author.username %}">{{ comment.author.username }}</a></strong>
+        <small>{{ comment.date }}</small></p> <em>{{ comment.text }} </em>
+       {% if comment.author == user %}
+             <div>
+               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'comment-edit' comment.pk %}">Update</a>
+               <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'comment-delete' comment.pk %}">Delete</a>
+             </div>
+       {% endif %}
+    {% endfor %}
+    <div class="pagination">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a class="btn btn-outline-info" href="?page=1">&laquo; first</a>
+              <a class="btn btn-outline-info" href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+  
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+  
+          {% if page_obj.has_next %}
+              <a class="btn btn-outline-info" href="?page={{ page_obj.next_page_number }}">next</a>
+              <a class="btn btn-outline-info" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
+{% endblock content %}
